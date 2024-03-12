@@ -33,7 +33,7 @@ jobs:
         run: echo "BUILD_VERSION=$(sed -n '/^version/p' build.gradle | sed -E "s/[(version )']//g")" >> "$GITHUB_ENV"
       - name: Get build version WINDOWS
         if: ${{ matrix.os == 'windows-latest' }}
-        run: echo "BUILD_VERSION=$(((Select-String -Pattern '^version' build.gradle | Select-Object -First 1).Line -replace "version |'").Trim())" >> "$GITHUB_ENV"
+        run: echo "BUILD_VERSION=$(((Select-String -Pattern '^version' build.gradle | Select-Object -First 1).Line -replace "version |'").Trim())" >> $env:GITHUB_ENV
       - name: Execute build
         run: ./gradlew --info --stacktrace build
       - name: Build Artifact
