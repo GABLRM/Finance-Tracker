@@ -1,6 +1,7 @@
 package com.example.financemanager.controller;
 
 import com.example.financemanager.model.Expense;
+import com.example.financemanager.utils.ExpenseDAO;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -19,9 +20,7 @@ public class ExpenseController {
 
     public void initialize() {
         items.addAll(
-                new Expense(LocalDate.of(2023, 1, 1), 600.0f, 200.0f, 150.32f, 100.0f, 426.0f, 200.0f, 92.0f),
-                new Expense(LocalDate.of(2023, 2, 1), 600.0f, 233.23f, 150.32f, 100.0f, 426.0f, 200.0f, 92.0f),
-                new Expense(LocalDate.of(2023, 3, 1), 600.0f, 200.0f, 150.32f, 130.0f, 426.0f, 200.0f, 92.0f)
+                ExpenseDAO.getAllExpenses()
         );
         expenseTable.setItems(items);
     }
