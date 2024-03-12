@@ -49,6 +49,7 @@ jlink {
     launcher {
         name = 'Finance-Tracker'
     }
+    addExtraDependencies('slf4j')
     jpackage {
         def currentOs = org.gradle.internal.os.OperatingSystem.current()
         def imgType = currentOs.windows ? 'ico' : currentOs.macOsX ? 'icns' : 'png'
