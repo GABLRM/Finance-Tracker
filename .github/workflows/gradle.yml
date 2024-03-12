@@ -22,9 +22,10 @@ jobs:
         uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.java }}
+          distribution: 'oracle'
       - name: Echo JAVA_HOME
         run: echo $JAVA_HOME
       - name : Verify Gradle Wrapper
-        uses: gradle/wrapper-validation-action@v1
+        uses: gradle/wrapper-validation-action@v2
       - name : Execute build
         run: ./gradlew --info --stacktrace build
