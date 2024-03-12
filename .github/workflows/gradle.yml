@@ -29,3 +29,10 @@ jobs:
         uses: gradle/wrapper-validation-action@v2
       - name : Execute build
         run: ./gradlew --info --stacktrace build
+      - name: Build Artifacts
+        run: ./gradlew --info --stacktrace jpackage
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Finance Manager Demo - ${{ matrix.os }}
+          path: build/jpackage/FinanceManagerDemo-[0-9]+.[0-9]+.[0-9]+.(exe|deb|pkg)
