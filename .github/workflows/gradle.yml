@@ -2,37 +2,35 @@ name: Java CI with Gradle
 
 on:
   push:
-    branches: [ main ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ main ]
+    branches: [ "main" ]
 
 jobs:
   build:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-        java: ['21.0.2']
+        os: [ubuntu-latest, macOS-latest, windows-latest]
+        java: [ '21.0.2' ]
       fail-fast: false
     name: ${{ matrix.os }}
     steps:
-      - name: Git Checkout
+      - name: Git checkout
         uses: actions/checkout@v4
-      - name: Set up JDK
+      - name: Setup JDK
         uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.java }}
           distribution: 'oracle'
-      - name: Echo JAVA_HOME
-        run: echo $JAVA_HOME
-      - name : Verify Gradle Wrapper
+      - name: Verify Gradle Wrapper
         uses: gradle/wrapper-validation-action@v2
-      - name : Execute build
+      - name: Execute build
         run: ./gradlew --info --stacktrace build
-      - name: Build Artifacts
+      - name: Build Artifact
         run: ./gradlew --info --stacktrace jpackage
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Finance Manager Demo - ${{ matrix.os }}
+          name: FinanceTracker - ${{ matrix.os }}
           path: build/jpackage/finance-tracker_*
