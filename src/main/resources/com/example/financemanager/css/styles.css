@@ -40,7 +40,7 @@
 }
 
 .background-pane {
-    -fx-background-color: -bg-gradient;
+    -fx-background-color: -background;
     -fx-padding: 10px 15px;
     -fx-background-radius: 10px;
 }

@@ -8,11 +8,16 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.TableView;
+import org.slf4j.ILoggerFactory;
+import org.slf4j.Logger;
 
 import java.time.LocalDate;
 import java.util.Optional;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 public class ExpenseController {
+    private static final Logger log = getLogger(ExpenseController.class);
     @FXML
     private TableView<Expense> expenseTable;
 
@@ -31,6 +36,7 @@ public class ExpenseController {
         result.ifPresent(items::add);
 
         System.out.println(result);
+        log.debug(result.toString());
         event.consume();
     }
 

@@ -1,31 +1,24 @@
 package com.example.financemanager.utils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.sqlite.JDBC;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
-import java.util.Objects;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import static com.example.financemanager.FinanceTrackerApplication.findAndCreateOSFolder;
 
 public class Database {
+    private static final Logger log = LoggerFactory.getLogger(Database.class);
 
     /**
      * Location of database
      */
-    private static final String location = "/home/scooby/database.db";
+    private static final String location = "database.db";
 
-
-    /**
-     * Location of database
-     */
-    private static final String databaseLocation = OsValidator.IS_WINDOWS ? System.getenv("APPDATA") + "/FinanceTracker/database.db" : OsValidator.IS_MAC ? System.getProperty("user.home") + "/Library/Application Support/FinanceTracker/database.db" : System.getProperty("user.home") + "/FinanceTracker/database.db";
     /**
      * Currently only table needed
      */
@@ -33,12 +26,6 @@ public class Database {
 
     public static boolean isOK() {
         if (!checkDrivers()) return false; //driver errors
-
-        try {
-            Files.createDirectories(Paths.get(location.replace("/database.db", "")));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
 
         if (!checkConnection()) return false; //can't connect to db
 
@@ -51,7 +38,7 @@ public class Database {
             DriverManager.registerDriver(new JDBC());
             return true;
         } catch (ClassNotFoundException | SQLException classNotFoundException) {
-            Logger.getAnonymousLogger().log(Level.SEVERE, LocalDateTime.now() + ": Could not start SQLite Drivers");
+            log.error("Could not start SQLite Drivers", classNotFoundException);
             return false;
         }
     }
@@ -60,7 +47,7 @@ public class Database {
         try (Connection connection = connect()) {
             return connection != null;
         } catch (SQLException e) {
-            Logger.getAnonymousLogger().log(Level.SEVERE, LocalDateTime.now() + ": Could not connect to database");
+            log.error("Could not connect to SQLite DB");
             return false;
         }
     }
@@ -81,27 +68,27 @@ public class Database {
                    """;
 
         try (Connection connection = Database.connect()) {
-            PreparedStatement statement = Objects.requireNonNull(connection).prepareStatement(createTables);
+            PreparedStatement statement = connection.prepareStatement(createTables);
             statement.executeUpdate();
             return true;
         } catch (SQLException exception) {
-            Logger.getAnonymousLogger().log(Level.SEVERE, LocalDateTime.now() + ": Could not find tables in database");
+            log.error("Could not create tables in database", exception);
             return false;
         }
     }
 
     protected static Connection connect() {
+        String osFolder = findAndCreateOSFolder();
+
         String dbPrefix = "jdbc:sqlite:";
         Connection connection;
         try {
-            connection = DriverManager.getConnection(dbPrefix + location);
+            connection = DriverManager.getConnection(dbPrefix + osFolder + "/" + location);
         } catch (SQLException exception) {
-            Logger.getAnonymousLogger().log(Level.SEVERE,
-                    LocalDateTime.now() + ": Could not connect to SQLite DB at " +
-                            location);
+            log.error("Could not connect to SQLite DB at " + osFolder + "/" + location, exception);
+
             return null;
         }
         return connection;
     }
-
 }
