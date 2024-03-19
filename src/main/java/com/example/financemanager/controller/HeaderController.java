@@ -1,4 +1,4 @@
 package com.example.financemanager.controller;
 
-public class ExpenseController {
+public class HeaderController {
 }
