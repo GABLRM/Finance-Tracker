@@ -24,7 +24,7 @@ public class FinanceTrackerApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         if (!Database.isOK()) {
-            log.error("Could not load databse");
+            log.error("Could not load database");
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Database Error");
             alert.setHeaderText("Could not load database");

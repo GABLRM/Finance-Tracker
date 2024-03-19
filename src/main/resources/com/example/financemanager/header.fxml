@@ -9,12 +9,11 @@
 <?import com.sun.javafx.scene.control.ContextMenuContent.MenuBox?>
 <MenuBar xmlns="http://javafx.com/javafx"
          xmlns:fx="http://javafx.com/fxml"
-         fx:controller="com.example.financemanager.controller.HeaderController"
-         prefHeight="400.0" prefWidth="600.0">
+         fx:controller="com.example.financemanager.controller.HeaderController">
 
     <Menu text="File">
-        <MenuItem text="Table"/>
-        <MenuItem text="Graph"/>
+        <MenuItem text="Table" onAction="#setViewValue"/>
+        <MenuItem text="Graph" onAction="#setViewValue"/>
     </Menu>
 
 </MenuBar>
