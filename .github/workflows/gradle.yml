@@ -42,4 +42,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: FinanceTracker-${{ env.BUILD_VERSION }}-${{ matrix.os }}
-          path: build/jpackage/finance-tracker_*
+          path: build/jpackage/finance-tracker*
