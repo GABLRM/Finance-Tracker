@@ -31,7 +31,7 @@ public class ExpenseController implements Initializable {
             String fileName = "";
             try {
                 if (Objects.equals(newValue, "Graphics")) {
-                    fileName = "expense-graphics.fxml";
+                    fileName = "expense-graph.fxml";
                 } else if (Objects.equals(newValue, "Expenses")) {
                     fileName = "expense-table.fxml";
                 } else if (Objects.equals(newValue, "Incomes")) {
