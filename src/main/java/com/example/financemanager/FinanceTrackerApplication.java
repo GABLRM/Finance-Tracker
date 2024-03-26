@@ -31,6 +31,7 @@ public class FinanceTrackerApplication extends Application {
             System.exit(1);
         }
         FXMLLoader fxmlLoader = new FXMLLoader(FinanceTrackerApplication.class.getResource("expense-view.fxml"));
+        //FXMLLoader fxmlLoader = new FXMLLoader(FinanceTrackerApplication.class.getResource("expense-graph.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         stage.setTitle("Finance Tracker");
         stage.getIcons().add(new Image(String.valueOf(FinanceTrackerApplication.class.getResource("assets/launcher.png"))));
