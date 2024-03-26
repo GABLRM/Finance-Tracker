@@ -77,9 +77,11 @@ public class Expense {
         return date;
     }
 
-    public float getTotal() {
+    public float getTotalExpense() {
         return total;
     }
+
+    public float getTotalIncome() { return total * 2;}
 
     public float getHousing() {
         return housing;

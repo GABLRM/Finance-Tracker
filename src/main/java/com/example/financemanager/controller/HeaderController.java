@@ -13,7 +13,7 @@ public class HeaderController {
         return viewValue;
     }
 
-    public void setViewValue(ActionEvent event) {
+    public void setView(ActionEvent event) {
         viewValue.set(((MenuItem) event.getSource()).getText());
         event.consume();
     }

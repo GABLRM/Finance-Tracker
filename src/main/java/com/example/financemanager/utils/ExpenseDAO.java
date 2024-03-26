@@ -1,6 +1,7 @@
 package com.example.financemanager.utils;
 
 import com.example.financemanager.model.Expense;
+import com.example.financemanager.model.Income;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -85,6 +86,75 @@ public class ExpenseDAO {
             log.error("Could not load Expenses from database", e);
         }
         return lastExpenses;
+    }
+
+    public static void addIncome(String date, Float salary, Float helps, Float autoBusiness, Float passives, Float other) {
+        String query = "INSERT INTO income(date, salary, helps, autoBusiness, passives, other) VALUES (?, ?, ?, ?, ?, ?)";
+
+        try (Connection connection = Database.connect()) {
+            assert connection != null;
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, date);
+            statement.setFloat(2, salary);
+            statement.setFloat(3, helps);
+            statement.setFloat(4, autoBusiness);
+            statement.setFloat(5, passives);
+            statement.setFloat(6, other);
+
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static List<Income> getIncomes() {
+        String query = "SELECT * FROM income";
+
+        List<Income> incomeArray = new ArrayList<>();
+
+        try (Connection connection = Database.connect()){
+            PreparedStatement statement = connection.prepareStatement(query);
+            ResultSet rs = statement.executeQuery();
+
+            while(rs.next()) {
+                incomeArray.add(new Income(
+                        LocalDate.parse(rs.getString("date"), DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+                        rs.getFloat("salary"),
+                        rs.getFloat("helps"),
+                        rs.getFloat("autoBusiness"),
+                        rs.getFloat("passives"),
+                        rs.getFloat("other")
+                ));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return incomeArray;
+    }
+
+    public static List<Income> findLastIncomesEndingAtCurrentMonth(int numberOfLine, LocalDate currentMonth) {
+        String query = "SELECT * FROM income WHERE date <= '" + currentMonth.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+                + "' ORDER BY date DESC LIMIT " + numberOfLine;
+
+        List<Income> lastIncomes = new ArrayList<>();
+
+        try (Connection connection = Database.connect()) {
+            PreparedStatement statement = connection.prepareStatement(query);
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) {
+                lastIncomes.add(new Income(
+                        LocalDate.parse(rs.getString("date"), DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+                        rs.getFloat("salary"),
+                        rs.getFloat("helps"),
+                        rs.getFloat("autoBusiness"),
+                        rs.getFloat("passives"),
+                        rs.getFloat("other")));
+            }
+        } catch (SQLException e) {
+            log.error("Could not load Incomes from database", e);
+        }
+        return lastIncomes;
 
     }
 }
