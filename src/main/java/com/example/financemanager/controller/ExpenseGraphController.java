@@ -1,6 +1,7 @@
 package com.example.financemanager.controller;
 
-import com.example.financemanager.utils.ExpenseDAO;
+import com.example.financemanager.model.Income;
+import com.example.financemanager.utils.ExpenseAndIncomeDAO;
 import com.example.financemanager.model.Expense;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -19,6 +20,9 @@ public class ExpenseGraphController {
 
     @FXML
     private LineChart<String, Float> lineChart;
+
+    @FXML
+    private BarChart<String, Float> barChart;
 
     @FXML
     private CategoryAxis xAxis;
@@ -46,7 +50,10 @@ public class ExpenseGraphController {
 
     private List<Expense> loadExpenses(LocalDate currentMonth) {
 
-        List<Expense> lastExpenses = ExpenseDAO.findLastExpensesEndingAtCurrentMonth(12, currentMonth);
+        List<Expense> lastExpenses = ExpenseAndIncomeDAO.findLastExpensesEndingAtCurrentMonth(12, currentMonth);
+
+        List<Expense> expenses = ExpenseAndIncomeDAO.getAllExpenses();
+        List<Income> incomes = ExpenseAndIncomeDAO.getAllIncomes();
 
         if (lastExpenses.isEmpty()) {
             return null;
@@ -54,6 +61,7 @@ public class ExpenseGraphController {
 
         pieChart.getData().clear();
         lineChart.getData().clear();
+        barChart.getData().clear();
 
         pieChart.getData().addAll(
                 new PieChart.Data("Logement", lastExpenses.getFirst().getHousing()),
@@ -99,6 +107,25 @@ public class ExpenseGraphController {
                 seriesTax,
                 seriesOther
         );
+        XYChart.Series<String, Float> seriesTotalExpense = new XYChart.Series<>();
+        seriesTotalExpense.setName("Total des dépenses");
+        XYChart.Series<String, Float> seriesTotalIncome = new XYChart.Series<>();
+        seriesTotalIncome.setName("Total des revenus");
+
+
+        expenses.stream().sorted(Comparator.comparing(Expense::getDate)).forEach(expense -> {
+            seriesTotalExpense.getData().add(new XYChart.Data<>(expense.getDate().format(DATE_FORMAT), expense.getTotal()));
+        });
+
+        incomes.stream().sorted(Comparator.comparing(Income::getDate)).forEach(income -> {
+            seriesTotalIncome.getData().add(new XYChart.Data<>(income.getDate().format(DATE_FORMAT), income.getTotal()));
+        });
+
+        barChart.getData().addAll(
+                seriesTotalIncome,
+                seriesTotalExpense
+        );
+
         return lastExpenses;
     }
 

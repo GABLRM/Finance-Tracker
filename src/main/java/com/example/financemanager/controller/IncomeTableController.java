@@ -1,8 +1,7 @@
 package com.example.financemanager.controller;
 
-import com.example.financemanager.model.Expense;
 import com.example.financemanager.model.Income;
-import com.example.financemanager.utils.ExpenseDAO;
+import com.example.financemanager.utils.ExpenseAndIncomeDAO;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -24,7 +23,7 @@ public class IncomeTableController {
     private final ObservableList<Income> items = FXCollections.observableArrayList();
 
     public void initialize() {
-        items.addAll(ExpenseDAO.getIncomes());
+        items.addAll(ExpenseAndIncomeDAO.getAllIncomes());
         incomeTable.setItems(items);
     }
 

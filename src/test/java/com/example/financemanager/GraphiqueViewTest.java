@@ -2,6 +2,7 @@ package com.example.financemanager;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.chart.BarChart;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.ChoiceBox;
@@ -45,9 +46,9 @@ public class GraphiqueViewTest {
     public void setUp(FxRobot robot) throws TimeoutException {
         robot.clickOn("Navigation");
 
-        WaitForAsyncUtils.waitFor(2, TimeUnit.SECONDS, () -> robot.lookup("Table").match(NodeQueryUtils.isVisible()).tryQuery().isPresent());
+        WaitForAsyncUtils.waitFor(2, TimeUnit.SECONDS, () -> robot.lookup("Graphics").match(NodeQueryUtils.isVisible()).tryQuery().isPresent());
 
-        robot.clickOn("Table", Motion.VERTICAL_FIRST, MouseButton.PRIMARY);
+        robot.clickOn("Graphcis", Motion.VERTICAL_FIRST, MouseButton.PRIMARY);
     }
 
     @Test
@@ -55,8 +56,9 @@ public class GraphiqueViewTest {
         verifyThat(".menu-bar", isVisible());
         robot.lookup(".menu-bar").queryAs(MenuBar.class).getMenus().forEach(menu -> {
             verifyThat(menu, MenuItemMatchers.hasText("Navigation"));
-            verifyThat(menu.getItems().get(0), MenuItemMatchers.hasText("Table"));
-            verifyThat(menu.getItems().get(1), MenuItemMatchers.hasText("Graph"));
+            verifyThat(menu.getItems().get(0), MenuItemMatchers.hasText("Graphics"));
+            verifyThat(menu.getItems().get(1), MenuItemMatchers.hasText("Expenses"));
+            verifyThat(menu.getItems().get(2), MenuItemMatchers.hasText("Incomes"));
         });
     }
 
@@ -66,24 +68,24 @@ public class GraphiqueViewTest {
 
         WaitForAsyncUtils.waitFor(2, TimeUnit.SECONDS, () -> robot.lookup("Graph").match(NodeQueryUtils.isVisible()).tryQuery().isPresent());
 
-        robot.clickOn("Graph", Motion.VERTICAL_FIRST, MouseButton.PRIMARY);
+        robot.clickOn("Expenses", Motion.VERTICAL_FIRST, MouseButton.PRIMARY);
 
-        verifyThat(".title-text", hasText("Tableau de bord"));
+        verifyThat(".title-text", hasText("récapitulatif des dépenses"));
     }
 
     @Test
-    public void shouldHaveTitle(FxRobot robot) throws TimeoutException {
+    public void shouldHaveExpenseTitle(FxRobot robot) throws TimeoutException {
+        robot.clickOn("Navigation");
+
+        WaitForAsyncUtils.waitFor(2, TimeUnit.SECONDS, () -> robot.lookup("Graph").match(NodeQueryUtils.isVisible()).tryQuery().isPresent());
+
+        robot.clickOn("Expenses", Motion.VERTICAL_FIRST, MouseButton.PRIMARY);
+
         verifyThat(".title-text", hasText("Tableau récapitulatif des dépenses"));
     }
 
     @Test
     public void shouldHaveChoiceBoxWithDate(FxRobot robot) throws TimeoutException {
-        robot.clickOn("Navigation");
-
-        WaitForAsyncUtils.waitFor(2, TimeUnit.SECONDS, () -> robot.lookup("Graph").match(NodeQueryUtils.isVisible()).tryQuery().isPresent());
-
-        robot.clickOn("Graph", Motion.VERTICAL_FIRST, MouseButton.PRIMARY);
-
         verifyThat("#periodChoiceBox", isVisible());
 
         LocalDate date = LocalDate.now();
@@ -99,12 +101,6 @@ public class GraphiqueViewTest {
 
     @Test
     public void shouldHaveCharts(FxRobot robot) throws TimeoutException {
-        robot.clickOn("Navigation");
-
-        WaitForAsyncUtils.waitFor(2, TimeUnit.SECONDS, () -> robot.lookup("Graph").match(NodeQueryUtils.isVisible()).tryQuery().isPresent());
-
-        robot.clickOn("Graph", Motion.VERTICAL_FIRST, MouseButton.PRIMARY);
-
         verifyThat("#pieChart", isVisible());
 
         assertThat(robot.lookup("#pieChart").queryAs(PieChart.class).getTitle(), equalTo("Répartition des dépenses"));
@@ -112,5 +108,20 @@ public class GraphiqueViewTest {
         verifyThat("#lineChart", isVisible());
 
         assertThat(robot.lookup("#lineChart").queryAs(LineChart.class).getTitle(), equalTo("Évolution des dépenses"));
+
+        verifyThat("#barChart", isVisible());
+
+        assertThat(robot.lookup("#barChart").queryAs(BarChart.class).getTitle(), equalTo("Dépenses VS Revenus"));
+    }
+
+    @Test
+    public void shouldHaveIncomeTitle(FxRobot robot) throws TimeoutException {
+        robot.clickOn("Navigation");
+
+        WaitForAsyncUtils.waitFor(2, TimeUnit.SECONDS, () -> robot.lookup("Graph").match(NodeQueryUtils.isVisible()).tryQuery().isPresent());
+
+        robot.clickOn("Incomes", Motion.VERTICAL_FIRST, MouseButton.PRIMARY);
+
+        verifyThat(".title-text", hasText("Tableau récapitulatif des revenus"));
     }
 }

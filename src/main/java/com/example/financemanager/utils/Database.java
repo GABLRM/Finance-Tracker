@@ -76,11 +76,11 @@ public class Database {
                             passives REAL NOT NULL,
                             other REAL NOT NULL
                         );
-                       
                    """;
 
         try (Connection connection = Database.connect()) {
             PreparedStatement statement = connection.prepareStatement(createIncome);
+            statement.executeUpdate();
             statement = connection.prepareStatement(createExpense);
             statement.executeUpdate();
             return true;

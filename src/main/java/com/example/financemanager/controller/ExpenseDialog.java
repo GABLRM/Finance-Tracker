@@ -2,7 +2,7 @@ package com.example.financemanager.controller;
 
 import com.example.financemanager.FinanceTrackerApplication;
 import com.example.financemanager.model.Expense;
-import com.example.financemanager.utils.ExpenseDAO;
+import com.example.financemanager.utils.ExpenseAndIncomeDAO;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -129,7 +129,7 @@ public class ExpenseDialog extends Dialog<Expense> {
             if (!Objects.equals(ButtonBar.ButtonData.OK_DONE, buttonType.getButtonData())) {
                 return null;
             }
-            ExpenseDAO.addExpense(
+            ExpenseAndIncomeDAO.addExpense(
                     LocalDate.parse(dateField.getText(), DateTimeFormatter.ofPattern("dd/MM/yy")).toString(),
                     Float.parseFloat(housingField.getText()),
                     Float.parseFloat(foodField.getText()),

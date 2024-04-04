@@ -1,7 +1,7 @@
 package com.example.financemanager.controller;
 
 import com.example.financemanager.model.Expense;
-import com.example.financemanager.utils.ExpenseDAO;
+import com.example.financemanager.utils.ExpenseAndIncomeDAO;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -23,7 +23,7 @@ public class ExpenseTableController {
 
     public void initialize() {
         items.addAll(
-                ExpenseDAO.getAllExpenses()
+                ExpenseAndIncomeDAO.getAllExpenses()
         );
         expenseTable.setItems(items);
     }
@@ -33,7 +33,6 @@ public class ExpenseTableController {
         Optional<Expense> result = addPersonDialog.showAndWait();
         result.ifPresent(items::add);
 
-        System.out.println(result);
         log.debug(result.toString());
         event.consume();
     }

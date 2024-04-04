@@ -11,13 +11,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
-public class ExpenseDAO {
+public class ExpenseAndIncomeDAO {
 
-    private static final Logger log = LoggerFactory.getLogger(ExpenseDAO.class);
+    private static final Logger log = LoggerFactory.getLogger(ExpenseAndIncomeDAO.class);
 
 
     public static void addExpense(String date, float housing, float food, float goingOut, float transportation, float travel, float tax, float other) {
@@ -45,7 +43,7 @@ public class ExpenseDAO {
         try (Connection connection = Database.connect();
              PreparedStatement preparedStatement = Objects.requireNonNull(connection).prepareStatement(sql)) {
             ResultSet rs = preparedStatement.executeQuery();
-            while(rs.next()) {
+            while (rs.next()) {
                 expenses.add(new Expense(
                         LocalDate.parse(rs.getString("date"), DateTimeFormatter.ofPattern("yyyy-MM-dd")),
                         rs.getFloat("housing"),
@@ -107,16 +105,16 @@ public class ExpenseDAO {
         }
     }
 
-    public static List<Income> getIncomes() {
+    public static List<Income> getAllIncomes() {
         String query = "SELECT * FROM income";
 
         List<Income> incomeArray = new ArrayList<>();
 
-        try (Connection connection = Database.connect()){
+        try (Connection connection = Database.connect()) {
             PreparedStatement statement = connection.prepareStatement(query);
             ResultSet rs = statement.executeQuery();
 
-            while(rs.next()) {
+            while (rs.next()) {
                 incomeArray.add(new Income(
                         LocalDate.parse(rs.getString("date"), DateTimeFormatter.ofPattern("yyyy-MM-dd")),
                         rs.getFloat("salary"),
@@ -129,32 +127,6 @@ public class ExpenseDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return incomeArray;
-    }
-
-    public static List<Income> findLastIncomesEndingAtCurrentMonth(int numberOfLine, LocalDate currentMonth) {
-        String query = "SELECT * FROM income WHERE date <= '" + currentMonth.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
-                + "' ORDER BY date DESC LIMIT " + numberOfLine;
-
-        List<Income> lastIncomes = new ArrayList<>();
-
-        try (Connection connection = Database.connect()) {
-            PreparedStatement statement = connection.prepareStatement(query);
-            ResultSet rs = statement.executeQuery();
-            while (rs.next()) {
-                lastIncomes.add(new Income(
-                        LocalDate.parse(rs.getString("date"), DateTimeFormatter.ofPattern("yyyy-MM-dd")),
-                        rs.getFloat("salary"),
-                        rs.getFloat("helps"),
-                        rs.getFloat("autoBusiness"),
-                        rs.getFloat("passives"),
-                        rs.getFloat("other")));
-            }
-        } catch (SQLException e) {
-            log.error("Could not load Incomes from database", e);
-        }
-        return lastIncomes;
-
     }
 }
